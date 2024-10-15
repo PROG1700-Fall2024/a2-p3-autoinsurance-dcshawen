@@ -4,29 +4,62 @@
     Description: Computes monthly insurance according to the provided schedule.
 """
 
-from DanMath import Validation
+from DanMath import Validate
 
 MALE_RATES = [(0.25 / 12), (0.17 / 12), (0.1 / 12)]
 FEMALE_RATES = [(0.25 / 12), (0.15 / 12), (0.1 / 12)]
+AGE_THRESHOLDS = [15, 25, 40, 70]
 
 def main():
-    i = input("Enter your gender (M/F).\n> ")
-    i2 = input("Enter your age.\n> ")
-    i3 = input("Enter the price of your vehicle\n> ")
+    banner = "| AUTO INSURANCE CALCULATOR |"
+    greeting = "Compute your monthly auto insurance rate!"
 
-    if i.lower() == "m":
+    print("-" * len(banner))
+    print(banner)
+    print("-" * len(banner))
+    print(greeting)
+    print("-" * len(banner))
+
+    sex = getSex()
+    age = getAge()
+    vehiclePrice = getVehiclePrice()
+
+    if sex == 0:
         rates = MALE_RATES
     else:
         rates = FEMALE_RATES
 
-    if (int(i2) >= 15) and (int(i2) < 25):
-        print(int(i3) * rates[0])
-    elif (int(i2) >= 25) and (int(i2) < 40):
-        print(int(i3) * rates[1])
-    elif (int(i2) >= 40) and (int(i2) < 70):
-        print(int(i3) * rates[2])
+    if (age >= AGE_THRESHOLDS[0]) and (age < AGE_THRESHOLDS[1]):
+        monthlyRate = vehiclePrice * rates[0]
+    elif (age >= AGE_THRESHOLDS[1]) and (age < AGE_THRESHOLDS[2]):
+        monthlyRate = vehiclePrice * rates[1]
+    elif (age >= AGE_THRESHOLDS[2]) and (age < AGE_THRESHOLDS[3]):
+        monthlyRate = vehiclePrice * rates[2]
+    
+    print("Your monthly insurance will be ${0:,.2f}".format(monthlyRate))
+
+def getVehiclePrice():
+    while (vehiclePrice := Validate.validateInt(input("Enter the price of your vehicle\n> "))) is None:
+        print("You have entered an invalid vehicle price.")
+    return vehiclePrice
+
+def getAge():
+    while (age := Validate.validateInt(input("Enter your age.\n> "))) is None:
+        print("You have entered an invalid age.")
+    if age >= 70:
+        print("You do not qualify for insurance.")
+        exit()
+
+    return age
+
+def getSex():
+    sex = input("Enter your gender (M/F).\n> ")
+    if sex.upper() == "M":
+        return 0
+    elif sex.upper() == "F":
+        return 1
     else:
-        print("You are not within the age range to be insured.")
+        getSex()
 
 if __name__ == "__main__":
     main()

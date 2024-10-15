@@ -4,7 +4,7 @@
     Desc: Contains custom math and validation functions
 """
 
-class Validation:
+class Validate:
 
     # Validates whether inputQuery is a valid number by trying to convert to a float
     # Returns the converted float if successfull and None if fails
